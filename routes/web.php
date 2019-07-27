@@ -18,3 +18,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::group(['namespace' => 'Blog', 'prefix' => 'blog'], function(){
+  Route::resource('posts', 'PostController')->names('blog.posts');
+});
+
+Route::resource('rest', 'RestTestController')->names('restTest');
