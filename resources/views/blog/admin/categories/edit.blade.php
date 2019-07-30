@@ -1,12 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    @php
-        /** @var \App\Models\BlogCategory $item */
-    @endphp
-    <form method="POST" action="{{ route('blog.admin.categories.update', $item->id) }}">
-    @method('PATCH')
+    @php /** @var \App\Models\BlogCategory $item */ @endphp
+
+    @if ($item->exists)
+      <form method="POST" action="{{ route('blog.admin.categories.update', $item->id) }}">
+      @method('PATCH')
+    @else
+      <form method="POST" action="{{ route('blog.admin.categories.store') }}">
+    @endif
     @csrf
+    
     <div class="container">
       @php
       /** @var \Illuminate\Support\ViewErrorBag $errors */
