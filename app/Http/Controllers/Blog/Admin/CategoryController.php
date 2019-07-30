@@ -97,7 +97,7 @@ class CategoryController extends BaseController
         if (empty($data['slug'])) {
             $data['slug'] = str_slug($data['title']);
         }
-        $result = $item->fill($data)->save();
+        $result = $item->update($data);
 
         if ($result) {
           return redirect()
