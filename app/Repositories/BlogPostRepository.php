@@ -40,6 +40,7 @@ public function getAllWithPaginate()
     $result = $this->startConditions()
                    ->select($columns)
                    ->orderBy('id', 'DESC')
+                   ->with(['category:id,title', 'user:id,name'])
                    ->paginate(25);
     
     return $result;
