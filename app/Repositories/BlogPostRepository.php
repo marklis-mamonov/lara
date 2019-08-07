@@ -46,4 +46,16 @@ public function getAllWithPaginate()
     return $result;
 }
 
+/**
+ * Получить модель и редактировать в админке
+ * 
+ * @param ind $id
+ * 
+ * @return Model
+ */
+public function getEdit($id)
+{
+    return $this->startConditions()->find($id);
+}
+
 }

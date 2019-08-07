@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Blog\Admin;
 
 use App\Repositories\BlogPostRepository;
+use App\Repositories\BlogCategoryRepository;
 use Illuminate\Http\Request;
 
 /**
- * Управление категориями блога
+ * Управление статьями блога
  * 
  * @package App\Http\Controllers\Blog\Admin
  */
@@ -18,11 +19,17 @@ class PostController extends BaseController
      * @var BlogPostRepository
      */
     private $blogPostRepository;
+
+    /**
+     * @var BlogCategoryRepository
+     */
+    private $blogCategoryRepository;
     
     public function __construct()
     {
         parent::__construct();
         $this->blogPostRepository = app(BlogPostRepository::class);
+        $this->blogCategoryRepository = app(BlogCategoryRepository::class);
     }
 
     /**
@@ -47,7 +54,7 @@ class PostController extends BaseController
         $item = new BlogCategory();
         $categoryList = $this->blogCategoryRepository->getForComboBox();
 
-        return view('blog.admin.categories.edit', compact('item', 'categoryList'));
+        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -81,16 +88,16 @@ class PostController extends BaseController
      * @param  BlogCategoryRepository $categoryRepository
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, BlogCategoryRepository $categoryRepository)
+    public function edit($id)
     {
-        $item = $this->blogCategoryRepository->getEdit($id);
+        $item = $this->blogPostRepository->getEdit($id);
         if (empty($item)) {
             abort(404);
         }
 
-        $categoryList = $categoryRepository->getForComboBox();
+        $categoryList = $this->blogCategoryRepository->getForComboBox();
 
-        return view('blog.admin.categories.edit', compact('item', 'categoryList'));
+        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -100,9 +107,11 @@ class PostController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(BlogCategoryUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
 
+        dd(__METHOD__, $request->all(), $id);
+ /*
         $item = BlogCategory::find($id);
         if (empty($item)) {
             return back()
@@ -126,6 +135,19 @@ class PostController extends BaseController
               ->withErrors(['msg' => 'Ошибка сохранения'])
               ->withInput();
         }
+        */
+    }
+
+    /**
+     * Удалить
+     * 
+     * @param int $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+      dd(__METHOD__, $id, request()->all());
     }
 }
 
