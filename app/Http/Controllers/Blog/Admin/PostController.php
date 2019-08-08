@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Models\BlogPost;
 use App\Http\Requests\BlogPostCreateRequest;
 use App\Http\Requests\BlogPostUpdateRequest;
 use App\Repositories\BlogPostRepository;
@@ -53,7 +54,7 @@ class PostController extends BaseController
      */
     public function create()
     {
-        $item = new BlogCategory();
+        $item = new BlogPost();
         $categoryList = $this->blogCategoryRepository->getForComboBox();
 
         return view('blog.admin.posts.edit', compact('item', 'categoryList'));
@@ -62,20 +63,17 @@ class PostController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  BlogPostCreateRequest  $request
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function store(BlogCategoryCreateRequest $request)
+    public function store(BlogPostCreateRequest $request)
     {
         $data = $request->input();
-        if (empty($data['slug'])) {
-            $data['slug'] = str_slug($data['title']);
-        }
-
-        $item = (new BlogCategory())->create($data);
+        $item = (new BlogPost())->create($data);
 
         if ($item) {
-            return redirect()->route('blog.admin.categories.edit', [$item->id])
+            return redirect()->route('blog.admin.posts.edit', [$item->id])
                 ->with(['success' => 'Успешно сохранено']);
         } else {
             return redirect()->withErrors(['msg'=> 'Ошибка сохранения'])
@@ -122,14 +120,6 @@ class PostController extends BaseController
         }
 
         $data = $request->all();
-        
-        /* Ушло в обсервер
-        if (empty($data['slug'])) {
-            $data['slug'] = \Str::slug($data['title']);
-        }
-        if (empty($item->published_at) && $data['is_published']) {
-            $data['published_at'] = Carbon::now();
-        } */
 
         $result = $item->update($data);
 
